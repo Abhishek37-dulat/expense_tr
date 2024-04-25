@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const sequelize = require("./utils/database.js");
 const expense = require("./routes/expenseroutes.js");
+const book = require("./routes/catebox.js");
 
 const app = express();
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/exp", expense);
+app.use("/api/book", book);
 
 sequelize
   .sync()

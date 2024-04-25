@@ -3,16 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="newcss.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <title>Expenses</title>
+    <title>Expense Tracker App</title>
   </head>
   <body>
-    <div class="fullcover">
-      <p style="color: #fff; font-size: large" id="usernamedata">
-        User Are Successfully Registered
-      </p>
+    <div class="main_app">
+      <form
+        class="main_app_form"
+        onsubmit="handleBookappointment(event)"
+        method="POST"
+      >
+        <div class="form_app_title">
+          <p>Expense Tracker App</p>
+          <p>Total Expense <p id="totalvalueclass" style="color: #f97d1f"></p></p>
+        </div>
+        <div class="form_app_input">
+          <label for="title">Enter Title</label>
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Enter Title"
+          />
+        </div>
+        <div class="form_app_input">
+          <label for="amount">Enter Amount</label>
+          <input
+            type="number"
+            name="amount"
+            id="amount"
+            placeholder="Enter Amount"
+          />
+        </div>
+        <div class="form_app_input">
+            <label for="category">Select Category</label>
+            <select name="category" id="category">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>
+              </select>
+          </div>
+
+        <div class="form_app_button">
+          <button id="formsubmit" type="submit">Add Expense</button>
+          <button id="formsubmitupdate" type="submit">Update</button>
+        </div>
+      </form>
     </div>
+    <div class="main_app_result" id="main_app_result"></div>
   </body>
-  <script src="./app.js"></script>
+  <script src="app2.js"></script>
 </html>
