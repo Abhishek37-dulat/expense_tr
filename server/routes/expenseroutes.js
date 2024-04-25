@@ -1,8 +1,9 @@
 const express = require("express");
-const { addUser } = require("../controller/expensecontroller.js");
+const { addUser, singinuser } = require("../controller/expensecontroller.js");
 
 const route = express.Router();
 
-route.post("/", addUser);
+route.post("/signup", addUser);
+route.post("/login", singinuser);
 
 module.exports = route;

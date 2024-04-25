@@ -11,7 +11,7 @@ const port = 8001;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/api/signup", expense);
+app.use("/api/exp", expense);
 
 sequelize
   .sync()

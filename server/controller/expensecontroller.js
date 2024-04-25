@@ -24,6 +24,29 @@ const addUser = async (req, res, next) => {
   }
 };
 
+const singinuser = async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+    const data = await Signup.findOne({ where: { email: email } });
+    console.log("Real Data: ", data.password);
+    if (!data) {
+      return res.status(400).send("user doesn't exists!");
+    }
+    if (data.password !== req.body.password) {
+      console.log(data.password, req.body.password);
+      return res.status(400).send("wrong password");
+    } else {
+      const result = data;
+      res.status(200).send(result);
+    }
+  } catch (err) {
+    console.log("ADDING:  ", err);
+    res.status(500).send("server error: ", err);
+  }
+};
+
 module.exports = {
   addUser,
+  singinuser,
 };

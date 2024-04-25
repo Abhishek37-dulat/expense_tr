@@ -25,7 +25,7 @@ async function handleSignup(event) {
       password: event.target.password.value,
     };
     const data = await axios.post(
-      "http://localhost:8001/api/signup/",
+      "http://localhost:8001/api/exp/signup/",
       formData
     );
     if (data?.status === 200) {
@@ -43,4 +43,31 @@ function handlenextPage(data) {
   const app1 = document.getElementById("usernamedata");
   app1.innerHTML = `Welcome ${data.data.name}`;
   app1.style.color = "white";
+}
+
+async function handleSignin(event) {
+  event.preventDefault();
+  const tempData = {
+    email: event.target.email.value,
+    password: event.target.password.value,
+  };
+  if (!tempData.email || !tempData.password) {
+    alert("all fields are required!");
+  } else {
+    const formData = {
+      email: event.target.email.value,
+      password: event.target.password.value,
+    };
+    const data = await axios.post(
+      "http://localhost:8001/api/exp/login/",
+      formData
+    );
+    if (data?.status === 200) {
+      console.log(data);
+      handlenextPage(data);
+    } else {
+      console.log(data);
+      alert("user doesn't exist!");
+    }
+  }
 }
