@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 
 const getAllExpense = (req, res, next) => {
-  ExpenseBook.findAll()
+  ExpenseBook.findAll({ where: { expenseId: req.user.id } })
     .then((result) => {
       console.log(result);
       res.status(200).json({ data: result });
@@ -20,6 +20,7 @@ const addexpense = async (req, res, next) => {
       title,
       amount,
       category,
+      expenseId: req.user.id,
     });
     res.status(200).json({ data: data });
   } catch (err) {
@@ -30,7 +31,9 @@ const addexpense = async (req, res, next) => {
 
 const deleteexpense = async (req, res, next) => {
   try {
-    const data = await ExpenseBook.findByPk(req.params.id);
+    const data = await ExpenseBook.findByPk(req.params.id, {
+      where: { expenseId: req.user.id },
+    });
     await data.destroy();
     res.status(200).json({ data: data });
   } catch (err) {

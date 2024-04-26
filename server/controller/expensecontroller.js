@@ -1,6 +1,7 @@
 const Signup = require("../models/expense.js");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const JWT = require("jsonwebtoken");
 
 const addUser = async (req, res, next) => {
   try {
@@ -41,13 +42,18 @@ const singinuser = async (req, res, next) => {
     if (!data) {
       return res.status(400).json({ message: "user doesn't exists!" });
     }
-    await bcrypt.compare(password, data.password, (err, result) => {
+    await bcrypt.compare(password, data.password, async (err, result) => {
       if (err) {
         return res.status(404).json({ message: "error while decrypting!" });
       }
       if (result) {
+        const token = await JWT.sign(
+          { name: data.name, id: data.id },
+          "secretkey"
+        );
+        console.log(token);
         const final = data;
-        res.status(200).json({ data: final });
+        res.status(200).json({ data: final, token });
       } else {
         return res.status(404).json({ message: "wrong password!" });
       }
