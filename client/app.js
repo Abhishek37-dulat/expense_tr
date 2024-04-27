@@ -55,6 +55,7 @@ function handlenextPagesec(data) {
 
 async function handleSignin(event) {
   event.preventDefault();
+  localStorage.removeItem("user_token");
   const tempData = {
     email: event.target.email.value,
     password: event.target.password.value,

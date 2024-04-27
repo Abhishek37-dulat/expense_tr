@@ -1,6 +1,7 @@
 const ExpenseBook = require("../models/formdata.js");
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
+const Signup = require("../models/expense.js");
 
 const getAllExpense = (req, res, next) => {
   ExpenseBook.findAll({ where: { expenseId: req.user.id } })
@@ -22,6 +23,13 @@ const addexpense = async (req, res, next) => {
       category,
       expenseId: req.user.id,
     });
+    const user = await Signup.findByPk(req.user.id);
+    await user.update({
+      total_cost:
+        user.total_cost === null
+          ? parseInt(amount)
+          : parseInt(user.total_cost) + parseInt(amount),
+    });
     res.status(200).json({ data: data });
   } catch (err) {
     console.log("ADDING:  ", err);
@@ -33,6 +41,10 @@ const deleteexpense = async (req, res, next) => {
   try {
     const data = await ExpenseBook.findByPk(req.params.id, {
       where: { expenseId: req.user.id },
+    });
+    const user = await Signup.findByPk(req.user.id);
+    await user.update({
+      total_cost: user.total_cost - parseInt(data.amount),
     });
     await data.destroy();
     res.status(200).json({ data: data });

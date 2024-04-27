@@ -21,6 +21,7 @@ const Signup = sequelize.define("expense", {
     allowNull: false,
   },
   isPremium: Sequelize.BOOLEAN,
+  total_cost: Sequelize.INTEGER,
 });
 
 module.exports = Signup;

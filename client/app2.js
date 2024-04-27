@@ -165,5 +165,21 @@ document.getElementById("features").onclick = async function (e) {
   const response = await axios.get(
     `http://localhost:8001/api/feature/premiumfeature`
   );
-  console.log(response);
+  const dd = document.getElementById("user_table");
+
+  for (let x = 0; x < response.data.length; x++) {
+    const ddtr = document.createElement("tr");
+    const dd1 = document.createElement("td");
+    const dd2 = document.createElement("td");
+    const dd3 = document.createElement("td");
+
+    dd1.textContent = response.data[x].id;
+    dd2.textContent = response.data[x].name;
+    dd3.textContent = response.data[x].total_cost;
+
+    ddtr.appendChild(dd1);
+    ddtr.appendChild(dd2);
+    ddtr.appendChild(dd3);
+    dd.appendChild(ddtr);
+  }
 };
