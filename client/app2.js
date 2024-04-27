@@ -1,5 +1,7 @@
 let updated_id = -1;
 
+const tokendata = localStorage.getItem("user_token");
+
 async function handleBookappointment(event) {
   event.preventDefault();
   if (updated_id != -1) {
@@ -14,7 +16,8 @@ async function handleBookappointment(event) {
     };
     const data = await axios.post(
       "http://localhost:8001/api/book/add",
-      formData
+      formData,
+      { headers: { Authorization: tokendata } }
     );
     console.log(data);
     const username_input = document.getElementById("title");
@@ -26,7 +29,9 @@ async function handleBookappointment(event) {
 }
 
 async function getallbookings() {
-  const data = await axios.get("http://localhost:8001/api/book/all");
+  const data = await axios.get("http://localhost:8001/api/book/all", {
+    headers: { Authorization: tokendata },
+  });
   const finaldata = data.data.data;
   console.log(finaldata);
   let totalexp = 0;
@@ -62,7 +67,8 @@ async function getallbookings() {
     b2.textContent = "Done";
     b2.addEventListener("click", async () => {
       const data = await axios.delete(
-        `http://localhost:8001/api/book/delete/${finaldata[i].id}`
+        `http://localhost:8001/api/book/delete/${finaldata[i].id}`,
+        { headers: { Authorization: tokendata } }
       );
       console.log(data);
       getallbookings();
@@ -87,7 +93,8 @@ async function handleupdate(event) {
   };
   const data = await axios.put(
     `http://localhost:8001/api/expense/${updated_id}`,
-    formData
+    formData,
+    { headers: { Authorization: tokendata } }
   );
   console.log(data);
   updated_id = -1;
@@ -99,3 +106,34 @@ async function handleupdate(event) {
 }
 
 getallbookings();
+
+document.getElementById("rzp-button1").onclick = async function (e) {
+  const token = localStorage.getItem("user_token");
+  const response = await axios.get(
+    `http://localhost:8001/api/purchase/premium`,
+    { headers: { Authorization: token } }
+  );
+  console.log(response);
+  let options = {
+    key: response.data.key_id,
+    order_id: response.data.order.id,
+    handler: async function (response) {
+      await axios.post(
+        `http://localhost:8001/api/purchase/updatepremium`,
+        {
+          order_id: options.order_id,
+          payment_id: response.razorpay_payment_id,
+        },
+        { headers: { Authorization: token } }
+      );
+      alert("you are a Premium User Now!");
+    },
+  };
+  const rzp1 = new Razorpay(options);
+  rzp1.open();
+  e.preventDefault();
+  rzp1.on("payment.failed", function (response) {
+    console.log(response);
+    alert("Something went wrong!");
+  });
+};
