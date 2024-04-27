@@ -160,3 +160,10 @@ document.getElementById("rzp-button1").onclick = async function (e) {
     alert("Something went wrong!");
   });
 };
+
+document.getElementById("features").onclick = async function (e) {
+  const response = await axios.get(
+    `http://localhost:8001/api/feature/premiumfeature`
+  );
+  console.log(response);
+};

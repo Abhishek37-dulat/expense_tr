@@ -8,6 +8,7 @@ const Signup = require("./models/expense.js");
 const ExpenseBook = require("./models/formdata.js");
 const order = require("./routes/orderroute.js");
 const Order = require("./models/order.js");
+const feature = require("./routes/premiumroute.js");
 const dotenv = require("dotenv").config();
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/exp", expense);
 app.use("/api/book", book);
 app.use("/api/purchase", order);
+app.use("/api/feature", feature);
 
 Signup.hasMany(ExpenseBook);
 ExpenseBook.belongsTo(Signup);
