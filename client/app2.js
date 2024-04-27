@@ -1,6 +1,20 @@
 let updated_id = -1;
 
 const tokendata = localStorage.getItem("user_token");
+if (!tokendata) {
+  window.location.href =
+    "file:///C:/Users/Abhishek%20Dulat/Downloads/sharpner/sharpner_exp/client/login.html";
+}
+
+const tokenfinal = JSON.parse(atob(tokendata.split(".")[1]));
+
+if (tokenfinal.isPremium) {
+  console.log(tokenfinal.name);
+  document.getElementById("rzp-button1").style.display = "none";
+  document.getElementById(
+    "rzp-p"
+  ).innerHTML = `${tokenfinal.name} You are Premium User`;
+}
 
 async function handleBookappointment(event) {
   event.preventDefault();
@@ -118,7 +132,7 @@ document.getElementById("rzp-button1").onclick = async function (e) {
     key: response.data.key_id,
     order_id: response.data.order.id,
     handler: async function (response) {
-      await axios.post(
+      const data = await axios.post(
         `http://localhost:8001/api/purchase/updatepremium`,
         {
           order_id: options.order_id,
@@ -126,14 +140,23 @@ document.getElementById("rzp-button1").onclick = async function (e) {
         },
         { headers: { Authorization: token } }
       );
+      localStorage.setItem("user_token", data.data.token);
       alert("you are a Premium User Now!");
     },
   };
   const rzp1 = new Razorpay(options);
   rzp1.open();
   e.preventDefault();
-  rzp1.on("payment.failed", function (response) {
-    console.log(response);
+  rzp1.on("payment.failed", async function (response) {
+    const data = await axios.post(
+      `http://localhost:8001/api/purchase/updatepremiumfailed`,
+      {
+        order_id: options.order_id,
+        payment_id: response.razorpay_payment_id,
+      },
+      { headers: { Authorization: token } }
+    );
+    localStorage.setItem("user_token", data.data.token);
     alert("Something went wrong!");
   });
 };

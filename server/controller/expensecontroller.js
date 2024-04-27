@@ -23,6 +23,7 @@ const addUser = async (req, res, next) => {
           name: name,
           email: email,
           password: result,
+          isPremium: false,
         });
         res.status(200).json({ data: final });
       });
@@ -48,7 +49,7 @@ const singinuser = async (req, res, next) => {
       }
       if (result) {
         const token = await JWT.sign(
-          { name: data.name, id: data.id },
+          { name: data.name, id: data.id, isPremium: data.isPremium },
           "secretkey"
         );
         console.log(token);

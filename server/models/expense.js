@@ -20,6 +20,7 @@ const Signup = sequelize.define("expense", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  isPremium: Sequelize.BOOLEAN,
 });
 
 module.exports = Signup;

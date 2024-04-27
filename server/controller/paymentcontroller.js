@@ -1,6 +1,7 @@
 const { JSON } = require("express");
 const Razorpay = require("razorpay");
 const Order = require("../models/order");
+const JWT = require("jsonwebtoken");
 
 const purchase = async (req, res) => {
   try {
@@ -30,13 +31,37 @@ const updatePurchase = async (req, res) => {
     const { payment_id, order_id } = req.body;
     const order = await Order.findOne({ where: { orderid: order_id } });
     await order.update({ paymentid: payment_id, status: "SUCCESSFUL" });
+    const data = await req.user.update({ isPremium: true });
+    const token = await JWT.sign(
+      { name: data.name, id: data.id, isPremium: data.isPremium },
+      "secretkey"
+    );
     return res
       .status(202)
-      .json({ sucess: true, message: "Transaction Successful!" });
+      .json({ sucess: true, message: "Transaction Successful!", token: token });
   } catch (error) {
     console.log(error);
     res.status(403).json({ error: error, message: "Something went wrong!" });
   }
 };
 
-module.exports = { purchase, updatePurchase };
+const updatePurchaseFailed = async (req, res) => {
+  try {
+    const { payment_id, order_id } = req.body;
+    const order = await Order.findOne({ where: { orderid: order_id } });
+    await order.update({ paymentid: payment_id, status: "FAILED" });
+    const data = await req.user.update({ isPremium: false });
+    const token = await JWT.sign(
+      { name: data.name, id: data.id, isPremium: data.isPremium },
+      "secretkey"
+    );
+    return res
+      .status(202)
+      .json({ sucess: true, message: "Transaction Successful!", token });
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({ error: error, message: "Something went wrong!" });
+  }
+};
+
+module.exports = { purchase, updatePurchase, updatePurchaseFailed };
