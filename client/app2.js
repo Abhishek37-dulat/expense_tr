@@ -166,7 +166,19 @@ document.getElementById("features").onclick = async function (e) {
     `http://localhost:8001/api/feature/premiumfeature`
   );
   const dd = document.getElementById("user_table");
+  dd.innerHTML = "";
+  const ddh = document.createElement("tr");
+  const ddh1 = document.createElement("th");
+  const ddh2 = document.createElement("th");
+  const ddh3 = document.createElement("th");
+  ddh1.textContent = "User_id";
+  ddh2.textContent = "User name";
+  ddh3.textContent = "Total cost";
 
+  ddh.appendChild(ddh3);
+  ddh.appendChild(ddh2);
+  ddh.appendChild(ddh1);
+  dd.appendChild(ddh);
   for (let x = 0; x < response.data.length; x++) {
     const ddtr = document.createElement("tr");
     const dd1 = document.createElement("td");
